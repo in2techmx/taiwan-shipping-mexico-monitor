@@ -10,10 +10,14 @@ const SHIPPING_KPIS = {
   "taiwanStraitTensionIndex": 6.8,
   "averageTransitDays": 22.4,
   "congestionDaysManzanillo": 4.8,
+  "baseOceanFreight": 3460.0,
+  "bunkerBafSurcharge": 620.0,
   "warRiskInsuranceSurcharge": 350.0,
+  "peakSeasonSurcharge": 250.0,
+  "bunkerFuelVlsfoUsdTon": 645.0,
   "probSpikeAbove6000": 8.45,
   "probDropBelow4000": 26.3,
-  "lastUpdate": "2026-10-05 17:27:07"
+  "lastUpdate": "2026-10-05 17:34:25"
 };
 
 const WEEKLY_HORIZONS = [
@@ -35,20 +39,20 @@ const WEEKLY_HORIZONS = [
     "day": 14,
     "date": "2026-10-19",
     "title": "SEMANA 2 (En 14 Días)",
-    "catalyst": "Renovación de contratos quincenales y primas BAF",
+    "catalyst": "Renovación de contratos quincenales y ajuste de prima BAF",
     "p50_feu": 4387.7,
     "p50_teu": 2808.1,
     "range_p25_p75": "$4085.6 - $4787.4",
     "range_p10_p90": "$3833.9 - $5184.0",
     "transit_days": "22 - 25 días",
-    "recommendation": "MONITOREO DE ESPACIOS: Asegurar booking spot si se confirman desvíos navieros."
+    "recommendation": "MONITOREO DE ESPACIOS: Asegurar tarifa si hay alertas de maniobras en el Estrecho o alza en crudo."
   },
   {
     "week": 3,
     "day": 21,
     "date": "2026-10-26",
     "title": "SEMANA 3 (En 21 Días)",
-    "catalyst": "Cierre de órdenes de exportación tecnológica en Taiwán",
+    "catalyst": "Cierre de órdenes tecnológicas en Taiwán y nearshoring automotriz",
     "p50_feu": 4356.6,
     "p50_teu": 2788.2,
     "range_p25_p75": "$3990.7 - $4854.3",
@@ -61,13 +65,13 @@ const WEEKLY_HORIZONS = [
     "day": 30,
     "date": "2026-11-04",
     "title": "SEMANA 4 (Horizonte a 1 Mes)",
-    "catalyst": "Apertura de itinerarios y temporada previa a Navidad",
+    "catalyst": "Apertura de itinerarios de noviembre y temporada navideña",
     "p50_feu": 4316.5,
     "p50_teu": 2762.6,
     "range_p25_p75": "$3882.2 - $4924.4",
     "range_p10_p90": "$3520.3 - $5561.2",
     "transit_days": "23 - 27 días",
-    "recommendation": "COBERTURA ESTRATÉGICA: Riesgo de cola alcista P90 en $5,850 USD por congestión en Manzanillo."
+    "recommendation": "COBERTURA ESTRATÉGICA: Riesgo de cola alcista P90 en $5,850 USD por congestión en Manzanillo y presión arancelaria."
   }
 ];
 
@@ -169,7 +173,7 @@ const SHIPPING_TRAJECTORY = [
     "p50": 4414.4,
     "p75": 4714.4,
     "p90": 5002.4,
-    "catalyst": "Actualización de recargo por combustible BAF de navieras"
+    "catalyst": "Actualización de recargo por combustible BAF indexado al crudo"
   },
   {
     "day": 9,
@@ -180,7 +184,7 @@ const SHIPPING_TRAJECTORY = [
     "p50": 4409.9,
     "p75": 4728.0,
     "p90": 5035.4,
-    "catalyst": "Evaluación de tránsito en Estrecho de Formosa vs Desvío"
+    "catalyst": "Evaluación de tránsito en Estrecho de Formosa vs Desvío Bashi"
   },
   {
     "day": 10,
@@ -257,7 +261,7 @@ const SHIPPING_TRAJECTORY = [
     "p50": 4378.8,
     "p75": 4808.0,
     "p90": 5237.6,
-    "catalyst": "Flujos comerciales de componentes automotrices hacia México"
+    "catalyst": "Flujos comerciales de componentes automotrices y nearshoring hacia México"
   },
   {
     "day": 17,
@@ -334,7 +338,7 @@ const SHIPPING_TRAJECTORY = [
     "p50": 4347.6,
     "p75": 4871.0,
     "p90": 5408.4,
-    "catalyst": "Flujos de importación para temporada decembrina en México"
+    "catalyst": "Flujos de importación acelerada por fricciones arancelarias"
   },
   {
     "day": 24,
@@ -448,21 +452,35 @@ const HISTORICAL_SHOCKS = [
 
 const RECENT_SHIPPING_NEWS = [
   {
-    "id": "SHIP-05548543",
+    "id": "SHIP-04395ea9",
+    "title": "Point Roberts, el pueblo de EEUU que podría desaparecer por la guerra comercial entre Trump y Canadá",
+    "source": "El Economista",
+    "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxObVhFOFpEdUJ1bzM1SV9PMUgzUERiNWVSa2pkMlVPVkZOMXBPYUwyTnV6T2MxRFd5MV93WGNhTUFvb01rZ2FnZ0RYal9uWnk3Tmk4bVZkYmZ2UVVrdm81VTRBb2c3a2VjUHlvT0NVcTlheDNyYnBwOW1WcXpFOThYRTRuTldObk0yX0doSzNGangtYnA4X015R1hIQkFWRDRnSG4yZG5XeW91UnZXOGpHV0Q0VWVTa0V0MnJtLVU0VTIyMkhfOGlZeUZRSEZBd2VKZmk1dmhmMkFrWVVITHVFVTVIMUhmcXlDRUVoaVE1OWVONDNlR0dkRg?oc=5",
+    "date": "2026-10-05",
+    "channel": "fricciones_geopoliticas",
+    "channel_ui": "⚖️ Fricciones China-Occidente",
+    "direction": "ALCISTA_FLETE",
+    "impact_score": 8.6,
+    "impact_level": "CRÍTICO",
+    "impact_badge": "badge-critico",
+    "transmission": "Aranceles de EE.UU. a China aceleran embarques masivos (front-loading) hacia México para nearshoring, saturando la capacidad de bodega y encareciendo fletes spot."
+  },
+  {
+    "id": "SHIP-003581c0",
     "title": "Los líderes europeos se creyeron muy listos con los aranceles pero China es un monstruo dispuesto a arrasar con todo",
     "source": "Híbridos y Eléctricos",
     "url": "https://news.google.com/rss/articles/CBMi8wFBVV95cUxOaUhOSlJ4M1VNVE0xYnJlZmZQUlNjYmIxWVZhSDBkV0V6cUxXUnIxUGwxZklCMmxtbG9zZi1udmU1akhxSjZoRlRDb3Z1UTY1MThmdVpyWHJrbENHZ1p3a2p1V3hzQ1pxeGU4Njk3SlJFOVU4SmRsTXd0RXNVdV9mZFZRMWNQRXg3WGRsVnV5WTlBdUo5MkQtUVNQY0Q0cU1WR2dvYmhzY29CbnRMVm1yTkJ1UTczZXU0Wm9SeDYtd2hDZGdrbElsQzRmc3NGVjdYSXMyeXV1OGs2OFlwbzlSWVlfTXFJYm5EWm9FZzJ5RFRCdGc?oc=5",
     "date": "2026-10-05",
     "channel": "china_ports",
     "channel_ui": "🇨🇳 China & Exportaciones",
-    "direction": "NEUTRAL",
+    "direction": "ALCISTA_FLETE",
     "impact_score": 7.3,
     "impact_level": "ALTO",
     "impact_badge": "badge-alto",
-    "transmission": "Operaciones de carga y zarpe en terminales chinas operando en régimen estándar de calendario."
+    "transmission": "Fuerte demanda de zarpes o restricciones de espacio en puertos de Shanghai/Ningbo impulsan tarifas spot al alza."
   },
   {
-    "id": "SHIP-02439a8c",
+    "id": "SHIP-0196a059",
     "title": "Maersk implementa recargo por temporada alta en rutas de Sudamérica a Norteamérica",
     "source": "Data Portuaria",
     "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxOWnlYN3ZZTVBTZ2ppRGVaaWExSXlGVlJ5MnY1MWVvQXYxeGNNSERJUmZhcUY5b3YxODM5dFlFR1lGYlF1UXBRS0o3UkIxZkdLSm9BOXJmX1l4ejVXV3gzMEhOMWlQR2R2R0xoMkZZTWZXbnRpM05YanpVZ0V5NzRrU3I5NHdyWDdXNHUyOUFJMU9wT2RteG1PMFVCZHlvVUM2NEZ0bVBIQ3g3djVmQTJSRFRta2hlWTFKcWZvSG5hS2l6cGR0Z0xqTElEcG9qQ0FzSGQ5WlROcw?oc=5",
@@ -476,7 +494,49 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Navieras aplican recargos generales (GRI) o cancelaciones de salidas (blank sailings) para sostener tarifas elevadas."
   },
   {
-    "id": "SHIP-03df779c",
+    "id": "SHIP-02d499d0",
+    "title": "Las exportaciones de petróleo del Golfo vuelven a niveles previos a la guerra pese al bloqueo de Ormuz",
+    "source": "Yahoo Finanzas",
+    "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNcVJMbHRtVG9LRGhMdnA3OEZkWmxSbWVrOFpjT2YxbXlNUzRqVlJ2YXJldkh3WTFkaDBwbGJqV0pkV1ppS2ZuQ1FrNk9yQlFod0NScmtqQU1TS2FxTnR1ejFPTnNBRXRnY3J1OVdIX1ZOaU9WRlY3WGc1UTZBdFNlQTFmM2lYYmFheXc3UHJHMmVJTENvRWhmX3JRYzdEak9DVDdBbzV6cEM4UQ?oc=5",
+    "date": "2026-10-05",
+    "channel": "petroleo_bunker",
+    "channel_ui": "🛢️ Petróleo & Combustible Bunker",
+    "direction": "ALCISTA_FLETE",
+    "impact_score": 6.8,
+    "impact_level": "ALTO",
+    "impact_badge": "badge-alto",
+    "transmission": "Alza del petróleo incrementa el precio del combustible marino (VLSFO); navieras indexan recargos BAF (+180 a +350 USD/FEU) y reducen velocidad (slow-steaming +2d)."
+  },
+  {
+    "id": "SHIP-03a523bc",
+    "title": "Exportaciones de crudo en Medio Oriente se acercan a sus niveles previos a la guerra",
+    "source": "El Informador",
+    "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxOSHE0X2NxMWF6VWpkVUlodkNWS1V5eHpzWXd3eVduNjJ5Rk10azFhbUkzRHFyRUVVM2cxTUtKVjhIWDJSRVozYzBxV091MXdsZGt3OTdGcEx1V2xJdEJTUmRkWExHcDNRUU9JX2NoSWt1SEVpYVZBMVpmaUlod2cyWVUzMmRVNG9RVmdaT1lxaGNfWWZyNEhmX3ZpTVBWb3hkRUgtNW16Sm5VU3g5RjRZLTc3dnRxeHlBdnlkOXY1U3hXNlBkUUtwanFUYkoycndhUFZHTDlGbWNfdzjSAeABQVVfeXFMTTc4c1BobmJqbE51WWJPektaTjdpYnBBbmZlcE8tdTl2SHpnX01nZlZqbzNnWHpmX2s5YTNuNVlHUEpUdUZKVXROYTNwNVlWejBwczVaWkJRdy11enRIMXJGSzYzTGNjRWNFbFllTFNKWmZMRDBmYTNJMm1BdV93WElxTlh5d3ljWnpVc3RvOFlpUzVBUkx5T1Y2cUQ1NVllYUNZXzZWdmFwenBMZ0RZM2dQY2Y0dFAxbW92ekZqSE4yb2plbGozUTJOcVlHLUZjTWZPMkxIdnhkdWpxM1VSWTE?oc=5",
+    "date": "2026-10-05",
+    "channel": "petroleo_bunker",
+    "channel_ui": "🛢️ Petróleo & Combustible Bunker",
+    "direction": "ALCISTA_FLETE",
+    "impact_score": 6.8,
+    "impact_level": "ALTO",
+    "impact_badge": "badge-alto",
+    "transmission": "Alza del petróleo incrementa el precio del combustible marino (VLSFO); navieras indexan recargos BAF (+180 a +350 USD/FEU) y reducen velocidad (slow-steaming +2d)."
+  },
+  {
+    "id": "SHIP-0196056a",
+    "title": "Cómo la guerra comercial entre Estados Unidos y Canadá puede afectar a los inversiones",
+    "source": "Yahoo",
+    "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQRWRmUFVNTjJ1aWFic3N4N2hOc3RNSEUzZC1PT3Y3X29nQldIZzdHekpVOGJ2d1ZpZGY4Rkh4WXl5MU52RWRwb082SmVERUQwa2NVcmJqcklKbW0tT2tTUlFCdXJWVzdPUXFqRXdZM2J0dGZkbm1zWWpZekJsWVU3bUQydmNEOTBLNGQ0djB4LXYzZFREWWc?oc=5",
+    "date": "2026-10-05",
+    "channel": "fricciones_geopoliticas",
+    "channel_ui": "⚖️ Fricciones China-Occidente",
+    "direction": "ALCISTA_FLETE",
+    "impact_score": 6.8,
+    "impact_level": "ALTO",
+    "impact_badge": "badge-alto",
+    "transmission": "Aranceles de EE.UU. a China aceleran embarques masivos (front-loading) hacia México para nearshoring, saturando la capacidad de bodega y encareciendo fletes spot."
+  },
+  {
+    "id": "SHIP-01c8569c",
     "title": "Confiabilidad de los itinerarios de portacontenedores en Asia cae 32,3% debido a la congestión portuaria",
     "source": "Mundo Marítimo",
     "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPTHRwMGlrdV9BczRZTGtlMEVsbHpfNkpVQ3NIRDgxNGROXzIxZW14a1piRUtjY042UEtFckFYQWFLNmxUR0xTZnctRWN6cmJUSE00aFFBUHp2TTM3VFJNWlhTaDRXRDVlaFhwQUhiWmZpYXFsYk9zNTF6OENkQUFQVGVKYzVObTc0dzF6Y3REQkNLcGxGUnFWRm54RkNOOXBXLUNJUGRNNm9WenJDVE40TzBWMGc1RjVQdUJnUC1XQ0h1YVlkcVNCOGNmXzZNQUl0Wmt2Vlg4Zw?oc=5",
@@ -487,10 +547,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 6.2,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Alta demanda de embarques o restricciones de espacio en puertos de Shanghai/Ningbo impulsan tarifas spot al alza."
+    "transmission": "Fuerte demanda de zarpes o restricciones de espacio en puertos de Shanghai/Ningbo impulsan tarifas spot al alza."
   },
   {
-    "id": "SHIP-00119dc6",
+    "id": "SHIP-00002f45",
     "title": "Las bolsas de valores de Taiwán cerraron con subidas; el Taiwan Weighted ganó un 2.46%",
     "source": "Investing.com México",
     "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPclpTRDRscTVyUmpmODdrMjd4bUZ2WENmQ2FEUzZZYTRKdlc3UTlqMnR0eVl6YUV5VmFhX3d3UTZUdWtBS183elFpZDR4ZldKTEliVlNybnNlR2dNZHVUcExMdUV4MUZDY0k0ZG5EUDlRay1MZklMcW5sWU9QbVItdUs2MkVsdVAyN1ZiZEEwVTQyaTg1dTJmbGFFUFIzanVEck1ZTnIyeEllQlctdFp3S3lqV3RIZ0JGQ09RNjM3Z2ViMEsyRzdPY0hXdGw3bWJZWXdsLUR3?oc=5",
@@ -501,10 +561,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
   },
   {
-    "id": "SHIP-05bb5413",
+    "id": "SHIP-0130d706",
     "title": "Evergreen Marine Corporation (Taiwan) Ltd. : Masterlink Securities es neutral",
     "source": "MarketScreener España",
     "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNQkx0RmE5bFViV09FLTZ1SnZOOHFsZHpBaTcxQVdIY0JiVzVnbnpaRW96bTR5VERsdGxmZkJsdlhoRVM1X0labmp3eHBiUHNPRm95SXZRWDEzeG5YV1Z4SVJvZ3E5cER5TEZWMVNUbDgxZDJtSnNBRy0zaHpXSC1DOGROWENHUkNkZ3hRMXVSQW01anBCWUdNNkNmSEprWGNjbzBFWkRYby1wbnVTaHRDOS1henN5a3dJcElWRXRlUVR6VXFsamFV?oc=5",
@@ -515,10 +575,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
   },
   {
-    "id": "SHIP-0302fd08",
+    "id": "SHIP-024ebeb2",
     "title": "Chinese Taipei – China marcadores y predicciones",
     "source": "Sofascore",
     "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNUk93bU1FMnZVTDF4RjA0M1g0eFZSOHhqejZKOTZLOTN0b1V6RWpDUEpTUUNKc2xMQXdLeXBDckJwcTZYTUJyVUZQVEQ2UW44LVdIUTc0a2g3dUZNMzhrYWEwX2p6Y0pVd3JlUk1NX1daNlluYjdRTlVRQkROc2xJbF9GS1NZZ25fMEtkZw?oc=5",
@@ -529,10 +589,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
   },
   {
-    "id": "SHIP-05bd0572",
+    "id": "SHIP-025e1ad5",
     "title": "Controversia en Alemania con la traducción de «Taiwan Travelogue»: Lin Yu-li asume la interpretación y Yang Shuang-zi defiende el vínculo entre literatura y política",
     "source": "rti.org.tw",
     "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE9PUWJoNnEyelhRSnI1OVVKdHhJencwbGgxYzBMbVZvMlc2VUtpRE5pSlVRcTh2VUNqbnJrel90TWsxeTRsYkxxVzlJRlNCLUQ0dm9VQ29PZjN6UFU?oc=5",
@@ -543,10 +603,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
   },
   {
-    "id": "SHIP-0259e05a",
+    "id": "SHIP-02ae597e",
     "title": "Stock market outlook today, 5 Oct: Sensex, Nifty prediction - DJIA, S&P, NASDAQ, GIFT Nifty, Nikkei, Taiwan cues",
     "source": "TradingView",
     "url": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxPVVJnRFhjNFpwZTgwOHJjaV9OTmtRSzNZRkhyYlRyZkZsY1ltaEItYWhub0tiN0dNMlNzUlBtM0VhZnhqWVhBbzB5c3BiOThsdHQwbmpYdGN3SmUxaEFsanZDVmFpczZVdjI4NUVHY29QYnhhNFItdTNUbldJUmtCbDAwbGFZcGFLczNMNHdXR2RadXdBbDQycjV2My1NcnExODdmMnNiUTYtR2IyVUpJLWlaRnZ0VDRfRkhMdndsTVRXVlFISTdBVTRsM3NwdFJMMWw4OUVNRDdQSEsxbFo3S3BMaHJmZG5sVTlXb1dVZw?oc=5",
@@ -557,10 +617,10 @@ const RECENT_SHIPPING_NEWS = [
     "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
   },
   {
-    "id": "SHIP-0392910b",
+    "id": "SHIP-04446f0f",
     "title": "China abre una investigación antidumping a la importación de un químico desde la UE",
     "source": "France 24",
     "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxOaDVvSFZOUTE1TXJnM2lRczN1V0RINm80ZlhUcTF1YnRCTF95NW9tcnY2NV9zWHRuZ0l3ZmVtck5kZEpUamZyOUk3dUtWaWFoaldmaFpuUV9SakRzejBBRml3eEtQYWkxYnNvNU9aQzlFb0tEcEV1YmtXTnpNZDRJSjMtS3l6TllHMFRMQWpVQVlVbjNlUHYxeHZwbDNfeUZhQTE3TUlHODRDUHZkU2oza1BtRm1EQ0hjZ2xJVUg0WWpYSFhzYWFYbU5PcGZWc3BLLTZZMDRTVDFlVlBabC1fV3NqOUhtQQ?oc=5",
@@ -574,7 +634,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Operaciones de carga y zarpe en terminales chinas operando en régimen estándar de calendario."
   },
   {
-    "id": "SHIP-011e9207",
+    "id": "SHIP-051dfafd",
     "title": "Estudiantes de Hai Phong ganan el primer premio en el Concurso de Pintura Infantil 2026 organizado por la ciudad de Ningbo (China).",
     "source": "Vietnam.vn",
     "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPVzJvUHpDRlVZU0M2VXo1VnlFbWNjcEVVcl9icVJxWmxiZm02aGV1VWRpQW1LazlQVXNNdDhXZnNKZWMySWdnWkc1Szc4ZUxWZmRVbGFibTlBUEhlUzZxUndPTmZYTldPcU1mckZzcG5tOE9UbG9pcURnRDZHWHdpaHE2eTk3LS10clN6ZzNQQ0xBUDd5aGJCX2s1U3RKX2ZfaGpJY250MlpHNUdHTWtDbmFXTTZUVWVKM1ZnN2V1WUg?oc=5",
@@ -588,7 +648,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Operaciones de carga y zarpe en terminales chinas operando en régimen estándar de calendario."
   },
   {
-    "id": "SHIP-058a86c6",
+    "id": "SHIP-058e6a93",
     "title": "Carrera Manzanillo 2026: 5 mil personas correrán dentro del puerto comercial más importante de México",
     "source": "24-horas.mx",
     "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxPUkd0MnN2RWZIYkpmN0lxOEJGTFVJdWRhZU9OS3czcU9DdDVPdjJlSFRVWUtlUVVwYl91S05Ga0FxT3o5SWVUelgxbzB3aVlOMHp5MWZEMkRveHVoWHpNRWR2TlhTR2kxZGZOdDRDYTRTZFdLWkplWl9la3FBZ0ZQa3NzcEJ4Z3ZiZTNrZ3ZtYnMxaEN1RUNQMHFiaXhqc0ZDbl90Yjl1azBBM1pCekRxdzJydmZ0VEJ1Q2RSM1p5b3dJTDBtX3NHWQ?oc=5",
@@ -602,7 +662,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Tiempos de fondeo y desalojo aduanal en rangos históricos promedio (4 a 6 días)."
   },
   {
-    "id": "SHIP-05bb5413",
+    "id": "SHIP-0130d706",
     "title": "Evergreen Marine Corporation (Taiwan) Ltd. : Masterlink Securities es neutral",
     "source": "MarketScreener España",
     "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNQkx0RmE5bFViV09FLTZ1SnZOOHFsZHpBaTcxQVdIY0JiVzVnbnpaRW96bTR5VERsdGxmZkJsdlhoRVM1X0labmp3eHBiUHNPRm95SXZRWDEzeG5YV1Z4SVJvZ3E5cER5TEZWMVNUbDgxZDJtSnNBRy0zaHpXSC1DOGROWENHUkNkZ3hRMXVSQW01anBCWUdNNkNmSEprWGNjbzBFWkRYby1wbnVTaHRDOS1henN5a3dJcElWRXRlUVR6VXFsamFV?oc=5",
@@ -616,7 +676,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Mantenimiento de tarifas de flete marítimo dentro de los contratos de servicio vigentes."
   },
   {
-    "id": "SHIP-014d1e05",
+    "id": "SHIP-009180e0",
     "title": "Maersk y CMA CGM terminan cooperación en la ruta Asia-Sudamérica",
     "source": "MasContainer",
     "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPZnlxNFRYZlZOdjZKODhmeE1RM1V5MjE1MmFoc3hyeFNCaEdxT3VseDF0eURWaHlpeFh4dmM3R2NNSnhUOUt2S1l3VG96LTNZLVZtYjdiSDF4dTlfY05HUWxVTUE4TUNCLXRka1RtVnlPWmlqcEJPWFlFMTRYdjN4QjRkbXVkQ2JWWGN2NXBJYlhOQVluN0twb3BNSEh5dw?oc=5",
@@ -630,7 +690,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Mantenimiento de tarifas de flete marítimo dentro de los contratos de servicio vigentes."
   },
   {
-    "id": "SHIP-01d24abb",
+    "id": "SHIP-04ca883e",
     "title": "Galería de Torre Maersk / C.F. Møller - 76",
     "source": "ArchDaily",
     "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQMUFwOUtqeHFSTDllMTJmOGRfMFFIeWs4c0pYWkxzYjFrX1VvbDVtV2pLOUhUcDZsTnlYem1QN2lpMFN5X05LdHJ5cl9rVEtoaHluWkFtdy1aLXVkNGNBQ25tSVM1Y1B3bURPTHBLbFE2WVRkNGg1UjAzZ1dGa1hqVnJUZ0x1QjN3aHF6S2V4WXRHNVhRSGRVUDhpVU44Znk5dUFFZ1dTUVg4aUw2MkxXUjNEX3pMRWhnMG94TzlUQlVUZVByMHc?oc=5",
@@ -644,21 +704,21 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Mantenimiento de tarifas de flete marítimo dentro de los contratos de servicio vigentes."
   },
   {
-    "id": "SHIP-01509deb",
-    "title": "Galería de Presentación de los Finalistas para El Centro de Artes Escénicas de Taipei - 54",
-    "source": "ArchDaily",
-    "url": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxPM1lZRWNKUG9aTTBsc3BKdC1JVzhjWUMtOEVGcEhsMTRFb0tSWUEydGZVOGxvNWQ1bkR6ZUxpV3dCS1czUzNHdWc2TUV0aGFJclE0Y2FqQ254SS05QzgwV0FKcklJd0FnVEhTVG5VcjhXXzE4ZmNDS0dqbmNmcGllSzhHZUtQSTRPYmxXbEduRG92TVhTYk5wWmZtd0RQZnhxZktQY19lR1RqbzdVczZSdHRGcUpMYkhjam9HcWpQaWZ0SnZqb3VUOUdlaFUxd2JNNDR0ZW1Vay1ieU1mZnMxSHpPWXhjdFM0d0dmNm9hRHktT3R3SG9abA?oc=5",
+    "id": "SHIP-04446f0f",
+    "title": "China abre una investigación antidumping a la importación de un químico desde la UE",
+    "source": "France 24",
+    "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxOaDVvSFZOUTE1TXJnM2lRczN1V0RINm80ZlhUcTF1YnRCTF95NW9tcnY2NV9zWHRuZ0l3ZmVtck5kZEpUamZyOUk3dUtWaWFoaldmaFpuUV9SakRzejBBRml3eEtQYWkxYnNvNU9aQzlFb0tEcEV1YmtXTnpNZDRJSjMtS3l6TllHMFRMQWpVQVlVbjNlUHYxeHZwbDNfeUZhQTE3TUlHODRDUHZkU2oza1BtRm1EQ0hjZ2xJVUg0WWpYSFhzYWFYbU5PcGZWc3BLLTZZMDRTVDFlVlBabC1fV3NqOUhtQQ?oc=5",
     "date": "2026-10-05",
-    "channel": "taiwan_strait",
-    "channel_ui": "🇹🇼 Taiwán & Estrecho",
+    "channel": "fricciones_geopoliticas",
+    "channel_ui": "⚖️ Fricciones China-Occidente",
     "direction": "NEUTRAL",
-    "impact_score": 4.6,
+    "impact_score": 5.7,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+    "transmission": "Disputas comerciales y regulatorias en proceso de negociación sin impacto inmediato en la disponibilidad de buques."
   },
   {
-    "id": "SHIP-0492e51c",
+    "id": "SHIP-05ad2c19",
     "title": "Price to sales forward de Ningbo Daye Garden Machinery Co. Ltd. Class A – SZSE:300879",
     "source": "TradingView",
     "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQNXg5azF0bnlZTGtMQW1IamlvVGVmSFJibW84MkMxSkFpdWdTanlwSjZWSnpHVGozQWZBcjhqWEZnY2IxUmhKazg3eXhGSTVpVWFxQnRnY3lwT0UyNjFYdC15dnVjdVNZbXZNTjh0LUxsQ1lIWjF1Tmx5Q1lLYjdVTXZJVXZhcC1XRXlCOG5uMEwwLVdKYS1RNjlnNVo?oc=5",
@@ -672,21 +732,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Operaciones de carga y zarpe en terminales chinas operando en régimen estándar de calendario."
   },
   {
-    "id": "SHIP-0044d910",
-    "title": "Elena Rybakina: “Lo siento mucho por los aficionados que esperaban verme jugar”",
-    "source": "Mundo Deportivo",
-    "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOMFVIZVQwSVdJQUE2RS0xWlk4dlZNd1R1ZWo1YlBJU2lYM2l0NGxjeWpUbzVreFRfRUZuOTlfWmNOVHBCdGVfMW93Vzh5VUlLRzdELWNiakphSUFkRGNadkpqOTA0OFozaHlJQUk3ck1mNkM4Yk8zeTY4anltMnVPcUo4Wmh0NmZxNzlOdlZIc21ZbUF5TW5hbjlVa04xNHl6RHptWjF2cE5iQ1pQTllXR3RQU3U2S0FJRnJBWDFVclRDMXhzZ2hVZHZR0gHKAUFVX3lxTE4wVUhlVDBJV0lBQTZFLTFaWTh2Vk13VHVlajViUElTaVgzaXQ0bGN5alRvNWt4VF9FRm45OV9aY05UcEJ0ZV8xb3dXOHlVSUtHN0QtY2JqSmFJQWREY1p2Smo5MDQ4WjNoeUlBSTdyTWY2QzhiTzN5NjhqeW0ydU9xSjhaaHQ2ZnE3OU52VkhzbVltQXlNbmFuOVVrTjE0eXpEem1aMXZwTmJDWlBOWVdHdFBTdTZLQUlGckFYMVVyVEMxeHNnaFVkdlE?oc=5",
-    "date": "2026-10-05",
-    "channel": "china_ports",
-    "channel_ui": "🇨🇳 China & Exportaciones",
-    "direction": "NEUTRAL",
-    "impact_score": 4.6,
-    "impact_level": "MODERADO",
-    "impact_badge": "badge-moderado",
-    "transmission": "Operaciones de carga y zarpe en terminales chinas operando en régimen estándar de calendario."
-  },
-  {
-    "id": "SHIP-052117b3",
+    "id": "SHIP-0274599f",
     "title": "CMIC Aguascalientes se declara lista para ejecutar el Cuarto Anillo",
     "source": "Líder Empresarial",
     "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPaUlYOFE4eTkwWFRvLXoyT21SOGR6djJORGU2U3VTcUI5V0VwcWNoa3hQLVhNazNmbG1mY1k4ZkhnUHl3MVlWU285YUktekxiZnFoVkZHVWZPdTBqZ3FNZTZIOHVibmdYS0lLRWtmRUtESTV4RFpaQ2xhcnhQeWJXNUdvaFBvWHU4ZTRIQ2R0YWNlX0NfdmV1bmRmWWRjX0xyT2Q4?oc=5",
@@ -700,7 +746,7 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Tiempos de fondeo y desalojo aduanal en rangos históricos promedio (4 a 6 días)."
   },
   {
-    "id": "SHIP-0495ac5f",
+    "id": "SHIP-0125273c",
     "title": "Canal de Panamá amplía el programa de asignación de cupos para las esclusas Panamax",
     "source": "Yahoo",
     "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNUFE1c1FFNE1EX1hZa19KVWpXd0JJdlVZcEhmbUltdzhock5mT08wOGdjWWxZZVNnQ2hRSlBHbGVTVGpLTllVVmRfeUttMV9aVjhXdDBPbk52ZnhNVGNxVW9FekljZmtybHNCWUhpZkxOTGlVMzBpeFJSRnVRa2FzSm9ZOUE1T1lWZDQweUVXbXEwNmRCZFNFYzE0T2Qwcy1TaWh3SWpMdkxvS1U?oc=5",
@@ -714,17 +760,73 @@ const RECENT_SHIPPING_NEWS = [
     "transmission": "Mantenimiento de tarifas de flete marítimo dentro de los contratos de servicio vigentes."
   },
   {
-    "id": "SHIP-00af02a0",
-    "title": "Todos los premios y nominaciones de Evergreen",
-    "source": "Filmaffinity",
-    "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE5hdnotanAzdHNES2ozSEI2WGlVNk4wcVBfcGxITHJGMTlSRjJLZ3BsSzM0YUFLYnpOTE54LUR6cTVVX0p6ZEg2OGZva0Y4ZFNBS2lwbklLQnRCVmgtSmtES3FoMldqLTh4TW9iZWRzTHc1UQ?oc=5",
+    "id": "SHIP-00d815a2",
+    "title": "GNL de Catar cruza Ormuz con más cargamentos",
+    "source": "Inspenet",
+    "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE9LbWd1V0t2RHZoN0Ixa2tkVkdZelRsMmhFSHdIUGRnX1c5VHc1bHloMS1IRm1kT2xNWjlYMXJrb1FoM0xRR3ZLaFZrTkt6MDRnSHNnZTE2bVJpbG9SMHFOdHVEZ3BqZnZHNHk3elItYWVYem9KNXc?oc=5",
     "date": "2026-10-05",
-    "channel": "shipping_lines",
-    "channel_ui": "🚢 Navieras & Contenedores",
+    "channel": "petroleo_bunker",
+    "channel_ui": "🛢️ Petróleo & Combustible Bunker",
     "direction": "NEUTRAL",
     "impact_score": 4.6,
     "impact_level": "MODERADO",
     "impact_badge": "badge-moderado",
-    "transmission": "Mantenimiento de tarifas de flete marítimo dentro de los contratos de servicio vigentes."
+    "transmission": "Cotizaciones de búnker marino en niveles estables sin alteración inmediata en los recargos por combustible."
+  },
+  {
+    "id": "SHIP-03aa2316",
+    "title": "Aumentan los ataques a petroleros en Ormuz, en medio del repunte de exportaciones de crudo",
+    "source": "Infobae",
+    "url": "https://news.google.com/rss/articles/CBMi9AFBVV95cUxPcVVsajBJUWVUUGRsR3l6VTRSUWpPM0JsczN1RGhQMjk2SnluM2daNlJpS0l3WmxsQW9UX3F6Q0Zxa21LTUR4dm9JQ2xYWEpqaWJ4UlNGYnhaRTNZM0ZoU3IxVG5ZVjRNSTNqZXFTdUdVdXUwOXktZzcxYUhzckNoMVFnc1hoaGZiWU5uOGNzV2U2Tjl0ZlJjQkYwaUZ2UDY0ckg3aS1sVXYzX0tzUXU3WGtPdFRVTVF5RUVVT1lRZ2xlcFRQMzJIYWkzYnZQeENuTVZTVmI5bkF1Mk9UY3JucHF6T1VUS3JaMVBZVGFaNVJGXzZD0gH0AUFVX3lxTE9xVWxqMElRZVRQZGxHeXpVNFJRak8zQmxzM3VEaFAyOTZKeW4zZ1o2UmlLSXdabGxBb1RfcXpDRnFrbUtNRHh2b0lDbFhYSmppYnhSU0ZieFpFM1kzRmhTcjFUbllWNE1JM2plcVN1R1V1dTA5eS1nNzFhSHNyQ2gxUWdzWGhoZmJZTm44Y3NXZTZOOXRmUmNCRjBpRnZQNjRySDdpLWxVdjNfS3NRdTdYa090VFVNUXlFRVVPWVFnbGVwVFAzMkhhaTNidlB4Q25NVlNWYjluQXUyT1Rjcm5wcXpPVVRLcloxUFlUYVo1UkZfNkM?oc=5",
+    "date": "2026-10-05",
+    "channel": "petroleo_bunker",
+    "channel_ui": "🛢️ Petróleo & Combustible Bunker",
+    "direction": "NEUTRAL",
+    "impact_score": 4.6,
+    "impact_level": "MODERADO",
+    "impact_badge": "badge-moderado",
+    "transmission": "Cotizaciones de búnker marino en niveles estables sin alteración inmediata en los recargos por combustible."
+  },
+  {
+    "id": "SHIP-056eeda9",
+    "title": "Irán mantiene cerrado el Estrecho de Ormuz y pone condiciones a Estados Unidos para reabrirlo (Redacción Astillero Informa)",
+    "source": "julioastillero.com",
+    "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQc0IyRU1ZSnUzLXV3ejE0NTJsX0xaWWhHMHpOY0Y0bUxYMHJiOWdPVmwwYm9Nc0NzN1NHR05EelQyZm9DRklMMXBRVlhvU1Q0NnRqemRBVUR5ZG9nVDk1dU9yeTBidklTUnl6VGhiZldIM05tOG1oVUJqaEFYXzVXc3MwSG5uTlhXMmM2Zks0LTFhdlpVTHdweUJ5RFNINmlDOGtkd1NMSG1kQWhpWEVzdlJFUlZ3VTRYUVloUlVR?oc=5",
+    "date": "2026-10-05",
+    "channel": "petroleo_bunker",
+    "channel_ui": "🛢️ Petróleo & Combustible Bunker",
+    "direction": "NEUTRAL",
+    "impact_score": 4.6,
+    "impact_level": "MODERADO",
+    "impact_badge": "badge-moderado",
+    "transmission": "Cotizaciones de búnker marino en niveles estables sin alteración inmediata en los recargos por combustible."
+  },
+  {
+    "id": "SHIP-03ac153e",
+    "title": "Suben las apuestas por Carney para el Nobel y Persona del Año tras plantarse a Trump",
+    "source": "Los Angeles Times",
+    "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQX0dOZ192SkluQk1uem44Z3R1WVBpLTVmd2xiSnFUVkh6dExHd01VMTBMSXF1UzJqUmJQTXVBdm9yT2tFYVZRekVKLUZvSkNCNV80V0V0UDRocFJuNGZ4UllaTUJWX2g4R2N1bmpHRXJuTXdJVW9NWi05bFVHUjJabkFSd1RJc05GX01zbXhhSF9XVFdRZ2Q5T0F2XzJicnF0NWZEbDAxV2NxOWppaUlEZE96eTlrUWVaQkF6YzJOeFlBcHRYdHUxTFB6TTFfM3V5ZExCTmVB?oc=5",
+    "date": "2026-10-05",
+    "channel": "fricciones_geopoliticas",
+    "channel_ui": "⚖️ Fricciones China-Occidente",
+    "direction": "ALCISTA_FLETE",
+    "impact_score": 4.6,
+    "impact_level": "MODERADO",
+    "impact_badge": "badge-moderado",
+    "transmission": "Aranceles de EE.UU. a China aceleran embarques masivos (front-loading) hacia México para nearshoring, saturando la capacidad de bodega y encareciendo fletes spot."
+  },
+  {
+    "id": "SHIP-0153b340",
+    "title": "Trump verá a Xi esta semana. Llega más debilitado, en parte por el desastre en Irán",
+    "source": "Sin Embargo",
+    "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPdDZIQUdTOTNaZjF3eUVJWEV6cFVldVdMYkRtajk5ZC1rZ3lrNERiLVRUUk0zRlN2cW4tNEZjQnFtbFNQa295UHlrMWdFbnJIdEdEdmtleXlNRWkwc1FVRXE5MnBZeGpFZklqYmNmZ0pNai1kbExrbU5iTzhDT1ZyZVdFRjdMZjBKQXV1X21TN0VZbExtSWJNZmdtMnNSQkJ3OGhrSEZ6U1I4cXVHcGwwZzFOTnA5aEE?oc=5",
+    "date": "2026-10-05",
+    "channel": "fricciones_geopoliticas",
+    "channel_ui": "⚖️ Fricciones China-Occidente",
+    "direction": "NEUTRAL",
+    "impact_score": 4.6,
+    "impact_level": "MODERADO",
+    "impact_badge": "badge-moderado",
+    "transmission": "Disputas comerciales y regulatorias en proceso de negociación sin impacto inmediato en la disponibilidad de buques."
   }
 ];

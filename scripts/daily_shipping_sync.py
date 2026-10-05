@@ -1,12 +1,14 @@
 """Daily Automated Multi-Channel Synchronizer for Taiwan & Asia-Mexico Shipping Monitor
 
-Ingests 4 Maritime & Geopolitical Channels:
+Ingests 6 Maritime, Energy & Geopolitical Channels:
 1. 🇹🇼 Taiwán & Estrecho de Formosa (Riesgo bélico, maniobras navales, Kaohsiung)
 2. 🇨🇳 China Continental & Puertos de Salida (Shanghai, Ningbo, Shenzhen, demanda)
 3. 🇲🇽 México & Puertos de Entrada (Manzanillo, Lázaro Cárdenas, aduanas, saturación)
-4. 🚢 Líneas Navieras & Tarifas Globales (Maersk, MSC, COSCO, Evergreen, BAF, PSS)
+4. 🚢 Líneas Navieras & Tarifas Globales (Maersk, MSC, COSCO, Evergreen, PSS)
+5. 🛢️ Petróleo & Combustible Bunker (VLSFO, BAF, crisis Medio Oriente / Ormuz)
+6. ⚖️ Fricciones China-Occidente (Aranceles, sanciones, nearshoring México)
 
-Computes Quantamental Freight Scoring (1.0 to 10.0), Freight Jumps, and Trajectory.
+Computes Quantamental Freight Scoring (1.0 to 10.0), Freight Jumps, and Cost Breakdown.
 """
 
 import json
@@ -40,6 +42,16 @@ CHANNELS = [
         "channel": "shipping_lines",
         "tag_ui": "🚢 Navieras & Contenedores",
         "query": 'maersk OR "cosco shipping" OR evergreen OR "fletes maritimos" OR "tarifas de contenedores" when:3d'
+    },
+    {
+        "channel": "petroleo_bunker",
+        "tag_ui": "🛢️ Petróleo & Combustible Bunker",
+        "query": '"petroleo" OR "bunker fuel" OR "vlsfo" OR "combustible marino" OR "ormuz" when:3d'
+    },
+    {
+        "channel": "fricciones_geopoliticas",
+        "tag_ui": "⚖️ Fricciones China-Occidente",
+        "query": '"aranceles china" OR "sanciones china" OR "nearshoring mexico" OR "guerra comercial" when:3d'
     }
 ]
 
@@ -48,9 +60,9 @@ def calculate_maritime_metrics(title, source, channel):
     sl = source.lower()
 
     # 1. Authority Tier
-    if any(k in sl for k in ["reuters", "bloomberg", "financial times", "lloyd's list", "freightos", "drewry", "joc", "el economista"]):
+    if any(k in sl for k in ["reuters", "bloomberg", "financial times", "lloyd's list", "freightos", "drewry", "joc", "el economista", "spglobal"]):
         auth_score = 0.85
-    elif any(k in tl for k in ["taiwan", "china", "manzanillo", "maersk", "cosco", "flete"]):
+    elif any(k in tl for k in ["taiwan", "china", "manzanillo", "maersk", "cosco", "flete", "petroleo", "arancel"]):
         auth_score = 0.70
     else:
         auth_score = 0.45
@@ -58,9 +70,9 @@ def calculate_maritime_metrics(title, source, channel):
     # 2. Shock Severity in Maritime Supply Chain
     if any(k in tl for k in ["guerra", "bloqueo", "ejercicios militares", "misil", "tensión militar", "cuarentena", "crisis"]):
         shock_score = 0.95
-    elif any(k in tl for k in ["saturación", "retraso", "congestión", "huelga", "arancel", "alza de flete", "recargo"]):
+    elif any(k in tl for k in ["saturación", "retraso", "congestión", "huelga", "arancel", "alza de flete", "recargo", "alza de petroleo"]):
         shock_score = 0.80
-    elif any(k in tl for k in ["acuerdo", "normaliza", "baja de flete", "fluidez", "descuento"]):
+    elif any(k in tl for k in ["acuerdo", "normaliza", "baja de flete", "fluidez", "descuento", "baja el crudo"]):
         shock_score = 0.70
     else:
         shock_score = 0.40
@@ -83,9 +95,9 @@ def calculate_maritime_metrics(title, source, channel):
         impact_badge = "badge-bajo"
 
     # Direction on Freight Rates
-    if any(k in tl for k in ["guerra", "bloqueo", "tensión", "congestión", "alza", "sube", "recargo", "escasez", "retraso"]):
+    if any(k in tl for k in ["guerra", "bloqueo", "tensión", "congestión", "alza", "sube", "recargo", "escasez", "retraso", "dispara", "arancel"]):
         direction = "ALCISTA_FLETE"
-    elif any(k in tl for k in ["baja", "cae", "normaliza", "exceso de capacidad", "descuento", "tregua"]):
+    elif any(k in tl for k in ["baja", "cae", "normaliza", "exceso de capacidad", "descuento", "tregua", "desacelera"]):
         direction = "BAJISTA_FLETE"
     else:
         direction = "NEUTRAL"
@@ -93,14 +105,14 @@ def calculate_maritime_metrics(title, source, channel):
     # Logistics Transmission Explanation
     if channel == "taiwan_strait":
         if direction == "ALCISTA_FLETE":
-            transmission = "Maniobras militares en el Estrecho obligan a desvíos de ruta marítima por el este de Taiwán (+2-3 días de tránsito) y elevan primas de seguro de guerra."
+            transmission = "Maniobras militares en el Estrecho obligan a desvíos de ruta por el este de Taiwán (+2 a 3 días de tránsito) y disparan las primas de seguro de guerra."
         elif direction == "BAJISTA_FLETE":
             transmission = "Tránsito marítimo fluido en el Estrecho de Formosa sin demoras operativas en Kaohsiung o Keelung."
         else:
-            transmission = "Monitoreo continuo de operaciones navales en el estrecho sin interrupción de itinerarios comerciales."
+            transmission = "Monitoreo continuo de operaciones aeronavales en el estrecho sin interrupción de itinerarios comerciales."
     elif channel == "china_ports":
         if direction == "ALCISTA_FLETE":
-            transmission = "Alta demanda de embarques o restricciones de espacio en puertos de Shanghai/Ningbo impulsan tarifas spot al alza."
+            transmission = "Fuerte demanda de zarpes o restricciones de espacio en puertos de Shanghai/Ningbo impulsan tarifas spot al alza."
         elif direction == "BAJISTA_FLETE":
             transmission = "Normalización de inventarios post-Golden Week y mayor disponibilidad de espacios de bodega hacia América Latina."
         else:
@@ -112,6 +124,20 @@ def calculate_maritime_metrics(title, source, channel):
             transmission = "Agilización de despachos aduanales y mayor desalojo ferroviario hacia el centro de México."
         else:
             transmission = "Tiempos de fondeo y desalojo aduanal en rangos históricos promedio (4 a 6 días)."
+    elif channel == "petroleo_bunker":
+        if direction == "ALCISTA_FLETE":
+            transmission = "Alza del petróleo incrementa el precio del combustible marino (VLSFO); navieras indexan recargos BAF (+180 a +350 USD/FEU) y reducen velocidad (slow-steaming +2d)."
+        elif direction == "BAJISTA_FLETE":
+            transmission = "Caída en cotización del crudo alivia los costos operativos de combustible de las navieras y reduce el recargo BAF."
+        else:
+            transmission = "Cotizaciones de búnker marino en niveles estables sin alteración inmediata en los recargos por combustible."
+    elif channel == "fricciones_geopoliticas":
+        if direction == "ALCISTA_FLETE":
+            transmission = "Aranceles de EE.UU. a China aceleran embarques masivos (front-loading) hacia México para nearshoring, saturando la capacidad de bodega y encareciendo fletes spot."
+        elif direction == "BAJISTA_FLETE":
+            transmission = "Distensión arancelaria o estabilidad comercial modera el apetito por embarques de pánico, equilibrando tarifas."
+        else:
+            transmission = "Disputas comerciales y regulatorias en proceso de negociación sin impacto inmediato en la disponibilidad de buques."
     else:  # shipping_lines
         if direction == "ALCISTA_FLETE":
             transmission = "Navieras aplican recargos generales (GRI) o cancelaciones de salidas (blank sailings) para sostener tarifas elevadas."
@@ -137,7 +163,7 @@ def fetch_maritime_news(channel_info):
         with urllib.request.urlopen(req, timeout=12) as resp:
             content = resp.read()
         root = ET.fromstring(content)
-        for item in root.findall(".//item")[:6]:
+        for item in root.findall(".//item")[:5]:
             title = item.findtext("title", "")
             link = item.findtext("link", "")
             source = item.findtext("source", "Medio Internacional")
@@ -168,20 +194,10 @@ def fetch_maritime_news(channel_info):
     return articles
 
 def generate_stochastic_freight_trajectory(base_spot_feu=4450.0, days=30):
-    """
-    Vectorized simulation of Container Freight Rates (Merton Jump-Diffusion)
-    Modeling asymmetric positive jumps due to Taiwan Strait geopolitical disruptions.
-    """
     import random
     random.seed(42)
 
     trajectory = []
-    dt = 1.0 / 365.0
-    sigma = 0.35  # Annualized volatility of container freight rates
-    lambda_jump = 0.12  # Probability of disruption jump per month
-    jump_mean = 0.28  # +28% spike on naval drill/crisis
-    jump_std = 0.15
-
     current_median = base_spot_feu
     base_date = datetime.now()
 
@@ -194,22 +210,22 @@ def generate_stochastic_freight_trajectory(base_spot_feu=4450.0, days=30):
         "Rotación de vacíos y disponibilidad de equipo en Kaohsiung",
         "Cierre semanal; consolidación de bookings hacia Manzanillo",
         "Reporte quincenal de congestión portuaria en México",
-        "Actualización de recargo por combustible BAF de navieras",
-        "Evaluación de tránsito en Estrecho de Formosa vs Desvío",
+        "Actualización de recargo por combustible BAF indexado al crudo",
+        "Evaluación de tránsito en Estrecho de Formosa vs Desvío Bashi",
         "Programación de salidas (Blank Sailings) de consorcios navieros",
         "Operaciones logísticas estándar en corredor transpacífico",
         "Arribos escalonados a fondeadero de Manzanillo",
         "Renovación de contratos forward spot de navieras asiáticas",
         "Cierre de Semana 2; balance de capacidad de bodega",
         "Monitoreo de inventarios en hubs tecnológicos de Taiwán (Hsinchu)",
-        "Flujos comerciales de componentes automotrices hacia México",
+        "Flujos comerciales de componentes automotrices y nearshoring hacia México",
         "Verificación de primas de riesgo bélico en aseguradoras navales",
         "Desalojo aduanal y disponibilidad ferroviaria en Lázaro Cárdenas",
         "Actualización de índices FBX y SCFI Asia-América Latina",
         "Cierre de Semana 3; acumulación de carga previa a fin de mes",
         "Inspección de capacidad en terminales de Ningbo y Shenzhen",
         "Dinámica de tarifas de flete y recargos por temporada alta (PSS)",
-        "Flujos de importación para temporada decembrina en México",
+        "Flujos de importación acelerada por fricciones arancelarias",
         "Operaciones marítimas ordinarias sin bloqueos en estrecho",
         "Evaluación de tiempos de espera en muelles de México",
         "Planificación de bookings para embarques de noviembre",
@@ -221,7 +237,6 @@ def generate_stochastic_freight_trajectory(base_spot_feu=4450.0, days=30):
     for d in range(days + 1):
         cur_date = (base_date + timedelta(days=d)).strftime("%Y-%m-%d")
         
-        # Dispersion widens over time with positive skew
         std_factor = math.sqrt(d + 1) * 65.0
         jump_risk = (d * 0.015) * 450.0
 
@@ -254,7 +269,7 @@ def main():
     all_articles = []
     for ch in CHANNELS:
         arts = fetch_maritime_news(ch)
-        print(f"Canal '{ch['channel']}': {len(arts)} noticias marítimas recuperadas.")
+        print(f"Canal '{ch['channel']}': {len(arts)} noticias recuperadas.")
         all_articles.extend(arts)
 
     all_articles.sort(key=lambda x: x["impact_score"], reverse=True)
@@ -281,20 +296,20 @@ def main():
             "day": 14,
             "date": trajectory[14]["date"],
             "title": "SEMANA 2 (En 14 Días)",
-            "catalyst": "Renovación de contratos quincenales y primas BAF",
+            "catalyst": "Renovación de contratos quincenales y ajuste de prima BAF",
             "p50_feu": trajectory[14]["p50"],
             "p50_teu": round(trajectory[14]["p50"] * 0.64, 1),
             "range_p25_p75": f"${trajectory[14]['p25']} - ${trajectory[14]['p75']}",
             "range_p10_p90": f"${trajectory[14]['p10']} - ${trajectory[14]['p90']}",
             "transit_days": "22 - 25 días",
-            "recommendation": "MONITOREO DE ESPACIOS: Asegurar booking spot si se confirman desvíos navieros."
+            "recommendation": "MONITOREO DE ESPACIOS: Asegurar tarifa si hay alertas de maniobras en el Estrecho o alza en crudo."
         },
         {
             "week": 3,
             "day": 21,
             "date": trajectory[21]["date"],
             "title": "SEMANA 3 (En 21 Días)",
-            "catalyst": "Cierre de órdenes de exportación tecnológica en Taiwán",
+            "catalyst": "Cierre de órdenes tecnológicas en Taiwán y nearshoring automotriz",
             "p50_feu": trajectory[21]["p50"],
             "p50_teu": round(trajectory[21]["p50"] * 0.64, 1),
             "range_p25_p75": f"${trajectory[21]['p25']} - ${trajectory[21]['p75']}",
@@ -307,13 +322,13 @@ def main():
             "day": 30,
             "date": trajectory[30]["date"],
             "title": "SEMANA 4 (Horizonte a 1 Mes)",
-            "catalyst": "Apertura de itinerarios y temporada previa a Navidad",
+            "catalyst": "Apertura de itinerarios de noviembre y temporada navideña",
             "p50_feu": trajectory[30]["p50"],
             "p50_teu": round(trajectory[30]["p50"] * 0.64, 1),
             "range_p25_p75": f"${trajectory[30]['p25']} - ${trajectory[30]['p75']}",
             "range_p10_p90": f"${trajectory[30]['p10']} - ${trajectory[30]['p90']}",
             "transit_days": "23 - 27 días",
-            "recommendation": "COBERTURA ESTRATÉGICA: Riesgo de cola alcista P90 en $5,850 USD por congestión en Manzanillo."
+            "recommendation": "COBERTURA ESTRATÉGICA: Riesgo de cola alcista P90 en $5,850 USD por congestión en Manzanillo y presión arancelaria."
         }
     ]
 
@@ -326,7 +341,11 @@ def main():
         "taiwanStraitTensionIndex": 6.8,
         "averageTransitDays": 22.4,
         "congestionDaysManzanillo": 4.8,
+        "baseOceanFreight": 3460.0,
+        "bunkerBafSurcharge": 620.0,
         "warRiskInsuranceSurcharge": 350.0,
+        "peakSeasonSurcharge": 250.0,
+        "bunkerFuelVlsfoUsdTon": 645.0,
         "probSpikeAbove6000": 8.45,
         "probDropBelow4000": 26.30,
         "lastUpdate": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -380,7 +399,7 @@ const RECENT_SHIPPING_NEWS = {json.dumps(all_articles, indent=2, ensure_ascii=Fa
     with open(data_js_path, "w", encoding="utf-8") as f:
         f.write(data_js_content)
 
-    print(f"data.js generado con éxito en {data_js_path} ({len(all_articles)} noticias, 30 días de proyección).")
+    print(f"data.js actualizado con 6 canales ({len(all_articles)} noticias, petróleo y fricciones geopolíticas integradas).")
 
 if __name__ == "__main__":
     main()

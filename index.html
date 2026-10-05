@@ -374,20 +374,55 @@
       </div>
     </section>
 
+    <!-- Desglose de Costos de Flete -->
+    <section class="metric-card" style="margin-bottom: 2rem; border-left: 4px solid var(--accent-amber);">
+      <div class="section-title">
+        <span>📊 Desglose de Componentes de Costo por Contenedor FEU ($4,680 USD)</span>
+      </div>
+      <div class="section-desc">
+        Estructura de costos auditada: Cómo el petróleo, las tensiones bélicas y la saturación portuaria integran tu factura marítima.
+      </div>
+
+      <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.04);">
+          <small style="color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase;">1. Flete Base Oceánico Puro</small>
+          <div style="font-size: 1.35rem; font-weight: 800; color: #fff; font-family: 'JetBrains Mono', monospace; margin: 0.25rem 0;">$3,460 USD</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">73.9% de la tarifa naviera neta</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(245, 158, 11, 0.2);">
+          <small style="color: var(--accent-amber); font-size: 0.7rem; text-transform: uppercase;">2. Recargo Combustible Bunker (BAF)</small>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace; margin: 0.25rem 0;">$620 USD</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Indexado al barril y VLSFO ($645/ton)</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(236, 72, 153, 0.2);">
+          <small style="color: var(--accent-taiwan); font-size: 0.7rem; text-transform: uppercase;">3. Prima Guerra / Desvío Estrecho</small>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-taiwan); font-family: 'JetBrains Mono', monospace; margin: 0.25rem 0;">$350 USD</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Pólizas de seguro de guerra Kaohsiung</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(56, 189, 248, 0.2);">
+          <small style="color: var(--accent-cyan); font-size: 0.7rem; text-transform: uppercase;">4. Temporada Alta & Saturación (PSS)</small>
+          <div style="font-size: 1.35rem; font-weight: 800; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace; margin: 0.25rem 0;">$250 USD</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted);">Demoras de fondeo (4.8d Manzanillo)</div>
+        </div>
+      </div>
+    </section>
+
     <!-- Radar Cuantamental de Noticias -->
     <section style="margin-bottom: 2rem;">
       <div class="section-title">
-        <span>📡 Radar Cuantamental de Inteligencia Marítima & Geopolítica</span>
+        <span>📡 Radar Cuantamental de Inteligencia Marítima & Geopolítica (6 Canales)</span>
       </div>
       <div class="section-desc">
-        Detección en tiempo real de tensiones navales, saturación portuaria y decisiones tarifarias ordenadas por score de impacto.
+        Detección en tiempo real de tensiones navales, combustible búnker, saturación portuaria y aranceles ordenados por score de impacto.
       </div>
 
       <div class="filter-bar" id="channelFilters">
-        <button class="btn-filter active" onclick="filterChannel('all', this)">Todos (20)</button>
+        <button class="btn-filter active" onclick="filterChannel('all', this)">Todos (27)</button>
         <button class="btn-filter" onclick="filterChannel('taiwan_strait', this)">🇹🇼 Taiwán & Estrecho</button>
         <button class="btn-filter" onclick="filterChannel('china_ports', this)">🇨🇳 China & Puertos</button>
         <button class="btn-filter" onclick="filterChannel('mexico_ports', this)">🇲🇽 México & Manzanillo</button>
+        <button class="btn-filter" onclick="filterChannel('petroleo_bunker', this)">🛢️ Petróleo & Bunker BAF</button>
+        <button class="btn-filter" onclick="filterChannel('fricciones_geopoliticas', this)">⚖️ Fricciones Arancelarias</button>
         <button class="btn-filter" onclick="filterChannel('shipping_lines', this)">🚢 Navieras & Tarifas</button>
       </div>
 
