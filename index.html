@@ -504,22 +504,52 @@
       const grid = document.getElementById('weeklyCardsGrid');
       grid.innerHTML = '';
 
-      const colors = ['var(--accent-cyan)', 'var(--accent-emerald)', 'var(--accent-amber)', 'var(--accent-indigo)'];
+      const colors = ['var(--accent-emerald)', 'var(--accent-cyan)', 'var(--accent-amber)', 'var(--accent-rose)'];
 
       WEEKLY_HORIZONS.forEach((h, idx) => {
         const card = document.createElement('div');
         card.className = 'metric-card';
         card.style.borderTop = `3px solid ${colors[idx % colors.length]}`;
+        
+        const diffSign = h.diff_pct > 0 ? '+' : '';
+        const diffColor = h.diff_pct < 0 ? 'var(--accent-emerald)' : (h.diff_pct > 10 ? 'var(--accent-rose)' : 'var(--accent-amber)');
+
         card.innerHTML = `
-          <div class="metric-title" style="color: ${colors[idx % colors.length]}; font-weight: 700;">📅 ${escapeHtml(h.title)}</div>
-          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem;">${escapeHtml(h.catalyst)}</div>
-          <div class="metric-value" style="font-size: 1.55rem; color: ${colors[idx % colors.length]}; margin-bottom: 0.25rem;">
-            $${h.p50_feu.toLocaleString()} USD <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">/ FEU</span>
+          <div class="metric-title" style="color: ${colors[idx % colors.length]}; font-weight: 700; margin-bottom: 0.25rem;">
+            📅 ${escapeHtml(h.title)}
           </div>
-          <div style="font-size: 0.8rem; margin-bottom: 0.25rem;"><strong>20ft (TEU):</strong> $${h.p50_teu.toLocaleString()} USD</div>
-          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.4rem;"><strong>Rango P25-P75:</strong> ${h.range_p25_p75}</div>
-          <div style="font-size: 0.75rem; color: var(--accent-amber); font-weight: 600; margin-bottom: 0.5rem;">⏱️ Tránsito estimado: ${h.transit_days}</div>
-          <div style="font-size: 0.72rem; background: rgba(255,255,255,0.03); padding: 0.4rem; border-radius: 0.35rem; color: #cbd5e1; border-left: 2px solid ${colors[idx % colors.length]};">
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.5rem; min-height: 28px;">
+            ${escapeHtml(h.catalyst)}
+          </div>
+          
+          <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap;">
+            <div class="metric-value" style="font-size: 1.65rem; color: ${colors[idx % colors.length]}; margin: 0;">
+              $${Math.round(h.p50_feu).toLocaleString()} USD
+            </div>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">40ft FEU</span>
+          </div>
+
+          <div style="margin-bottom: 0.65rem;">
+            <span style="font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 0.35rem; background: rgba(255,255,255,0.06); color: ${diffColor}; font-family: 'JetBrains Mono', monospace;">
+              ${diffSign}${h.diff_pct}% (${diffSign}$${Math.round(h.diff_usd)} USD) · ${escapeHtml(h.diff_label)}
+            </span>
+          </div>
+
+          <div style="font-size: 0.8rem; margin-bottom: 0.3rem;">
+            <strong>20ft (TEU):</strong> $${Math.round(h.p50_teu).toLocaleString()} USD
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.25rem;">
+            <strong>Rango P25 - P75:</strong> ${escapeHtml(h.range_p25_p75)}
+          </div>
+          <div style="font-size: 0.78rem; color: var(--accent-rose); margin-bottom: 0.4rem;">
+            <strong>Techo de Crisis (P90):</strong> ${escapeHtml(h.p90_risk)} USD
+          </div>
+
+          <div style="font-size: 0.75rem; color: var(--accent-amber); font-weight: 600; margin-bottom: 0.5rem;">
+            ⏱️ Tránsito + Fondeo: ${escapeHtml(h.transit_days)}
+          </div>
+
+          <div style="font-size: 0.72rem; line-height: 1.45; background: rgba(255,255,255,0.03); padding: 0.5rem; border-radius: 0.4rem; color: #cbd5e1; border-left: 2px solid ${colors[idx % colors.length]};">
             ${escapeHtml(h.recommendation)}
           </div>
         `;
