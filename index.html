@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taiwan & Asia-Mexico Shipping Monitor | IN2TECHMX</title>
+  
+  <!-- Inter & JetBrains Mono Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-card: #0f172a;
+      --bg-card-hover: #1e293b;
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-amber: #f59e0b;
+      --accent-indigo: #818cf8;
+      --accent-taiwan: #ec4899;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.5;
+      padding-bottom: 4rem;
+    }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* Top Nav */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-card);
+      position: sticky; top: 0; z-index: 50;
+      padding: 0.85rem 0;
+    }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit; }
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent-taiwan), var(--accent-cyan));
+      color: #fff; font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.65rem; border-radius: 0.5rem;
+      letter-spacing: 0.05em; font-family: 'JetBrains Mono', monospace;
+    }
+    .brand-text h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+    .brand-text span { font-size: 0.7rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+    .nav-stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .stat-pill {
+      background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-card);
+      padding: 0.35rem 0.75rem; border-radius: 0.5rem; display: flex; flex-direction: column;
+    }
+    .stat-pill-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; font-family: 'JetBrains Mono', monospace; }
+    .stat-pill-val { font-size: 0.85rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+    .val-cyan { color: var(--accent-cyan); }
+    .val-emerald { color: var(--accent-emerald); }
+    .val-rose { color: var(--accent-rose); }
+    .val-amber { color: var(--accent-amber); }
+    .val-taiwan { color: var(--accent-taiwan); }
+
+    /* Section Typography */
+    .section-title {
+      font-size: 1.25rem; font-weight: 700; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    /* Hero Metrics Grid */
+    .hero { margin: 2rem 0; }
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;
+    }
+    .metric-card {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: 1rem; padding: 1.25rem; transition: transform 0.2s, border-color 0.2s;
+    }
+    .metric-card:hover { transform: translateY(-2px); border-color: var(--border-accent); }
+    .metric-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 500; }
+    .metric-value { font-size: 1.85rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; margin-bottom: 0.25rem; }
+    .metric-sub { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Chart & Sliders */
+    .chart-panel {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .chart-container { position: relative; height: 380px; width: 100%; margin-bottom: 1.5rem; }
+
+    .slider-box {
+      background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border-card);
+      border-radius: 0.75rem; padding: 1.25rem;
+    }
+    .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
+    #daySlider { width: 100%; accent-color: var(--accent-cyan); margin-bottom: 1rem; }
+    .slider-details-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;
+    }
+    .slider-detail-item {
+      background: rgba(255, 255, 255, 0.02); padding: 0.75rem; border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .slider-detail-item small { display: block; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .slider-detail-item strong { font-size: 1.1rem; font-family: 'JetBrains Mono', monospace; }
+
+    /* Calculator */
+    .calc-box {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .calc-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;
+    }
+    .calc-input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem; font-weight: 600; }
+    .calc-input-group select, .calc-input-group input {
+      width: 100%; background: #090d16; border: 1px solid var(--border-card);
+      color: #fff; padding: 0.65rem 0.85rem; border-radius: 0.5rem; font-family: inherit; font-size: 0.9rem;
+    }
+    .calc-summary-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;
+      background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-accent);
+      padding: 1.25rem; border-radius: 0.75rem;
+    }
+
+    /* News Radar */
+    .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .btn-filter {
+      background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-card);
+      color: var(--text-muted); padding: 0.45rem 0.85rem; border-radius: 0.5rem; font-size: 0.8rem;
+      cursor: pointer; transition: all 0.2s; font-weight: 500;
+    }
+    .btn-filter.active, .btn-filter:hover {
+      background: var(--accent-cyan); color: #090d16; font-weight: 700; border-color: var(--accent-cyan);
+    }
+
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; }
+    .news-card {
+      background: var(--bg-card); border: 1px solid var(--border-card);
+      border-radius: 1rem; padding: 1.25rem; display: flex; flex-direction: column;
+      justify-content: space-between; transition: all 0.2s;
+    }
+    .news-card:hover { transform: translateY(-2px); border-color: var(--border-accent); }
+    .news-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .news-source { font-weight: 600; color: var(--accent-cyan); }
+    .news-title { font-size: 0.95rem; font-weight: 600; line-height: 1.4; margin-bottom: 0.75rem; color: #f8fafc; }
+    .news-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+    .tag {
+      font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 0.35rem;
+      background: rgba(255, 255, 255, 0.06); color: var(--text-muted); font-family: 'JetBrains Mono', monospace;
+    }
+    .tag-bull { color: var(--accent-rose); background: rgba(244, 63, 94, 0.15); font-weight: 700; }
+    .tag-bear { color: var(--accent-emerald); background: rgba(16, 185, 129, 0.15); font-weight: 700; }
+    .badge-critico { color: #f43f5e; background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); font-weight: 700; }
+    .badge-alto { color: #fb923c; background: rgba(251, 146, 60, 0.15); border: 1px solid rgba(251, 146, 60, 0.35); font-weight: 700; }
+    .badge-moderado { color: #facc15; background: rgba(250, 204, 21, 0.15); border: 1px solid rgba(250, 204, 21, 0.3); }
+    .badge-bajo { color: #94a3b8; background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.2); }
+
+    .transmission-box {
+      margin: 0.85rem 0 1rem 0; padding: 0.75rem; border-radius: 0.5rem;
+      background: rgba(15, 23, 42, 0.75); border-left: 3px solid var(--accent-cyan);
+      font-size: 0.8rem; line-height: 1.45; color: #cbd5e1;
+    }
+    .transmission-title {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--accent-cyan); font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .news-link {
+      color: var(--accent-cyan); font-size: 0.8rem; text-decoration: none; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.3rem; align-self: flex-start;
+    }
+    .news-link:hover { text-decoration: underline; }
+
+    /* Shocks Table */
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left; }
+    th { padding: 0.6rem 0.5rem; border-bottom: 1px solid var(--border-card); color: var(--text-muted); font-weight: 600; }
+    td { padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-family: 'JetBrains Mono', monospace; }
+
+    footer {
+      border-top: 1px solid var(--border-card); padding: 2.5rem 0;
+      color: var(--text-muted); font-size: 0.8rem; margin-top: 3rem; text-align: center;
+    }
+    footer a { color: var(--accent-cyan); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <div class="brand-badge">SHIPPING</div>
+        <div class="brand-text">
+          <h1>TAIWAN & ASIA-MEXICO FREIGHT MONITOR</h1>
+          <span>IN2TECHMX LOGISTICS GOVERNANCE • ADR-006 SWARM</span>
+        </div>
+      </a>
+      <div class="nav-stats">
+        <div class="stat-pill">
+          <span class="stat-pill-label">Spot Kaohsiung ➔ MXZLO (40ft)</span>
+          <span class="stat-pill-val val-taiwan" id="navSpotKaohsiung">$4,680 USD</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Spot Shanghai ➔ MXZLO (40ft)</span>
+          <span class="stat-pill-val val-cyan" id="navSpotShanghai">$4,420 USD</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Tensión Estrecho Taiwán</span>
+          <span class="stat-pill-val val-amber" id="navTensionIndex">6.8 / 10 (ELEVADA)</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-pill-label">Fondeo Manzanillo</span>
+          <span class="stat-pill-val val-rose" id="navCongestionDays">4.8 DÍAS</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Hero Metrics Grid -->
+    <section class="hero">
+      <div class="metrics-grid">
+        <div class="metric-card" style="border-top: 3px solid var(--accent-taiwan);">
+          <div class="metric-title">Flete Spot Contenedor 40ft (FEU) Taiwán ➔ Manzanillo</div>
+          <div class="metric-value val-taiwan" id="heroSpotFeu">$4,680 USD</div>
+          <div class="metric-sub">Ruta Kaohsiung / Keelung con cruce del Estrecho de Formosa</div>
+        </div>
+        <div class="metric-card" style="border-top: 3px solid var(--accent-cyan);">
+          <div class="metric-title">Flete Spot Contenedor 40ft (FEU) China ➔ Manzanillo</div>
+          <div class="metric-value val-cyan">$4,420 USD</div>
+          <div class="metric-sub">Ruta Shanghai / Ningbo / Yantian a México Pacífico</div>
+        </div>
+        <div class="metric-card" style="border-top: 3px solid var(--accent-amber);">
+          <div class="metric-title">Prima de Riesgo de Guerra / Desvío (Bashi Channel)</div>
+          <div class="metric-value val-amber">+$350 USD</div>
+          <div class="metric-sub">Recargo por seguro naval ante ejercicios en el Estrecho (+2.8 días)</div>
+        </div>
+        <div class="metric-card" style="border-top: 3px solid var(--accent-emerald);">
+          <div class="metric-title">Riesgo de Disrupción Crítica (> $6,000 USD)</div>
+          <div class="metric-value val-emerald">8.45%</div>
+          <div class="metric-sub">Probabilidad de flete normalizado (< $4,000 USD): 26.30%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Horizontes Semanales Clave -->
+    <section style="margin-bottom: 2rem;">
+      <div class="section-title">
+        <span>🎯 Horizontes de Costo de Flete Semanal (Semana 1 a Semana 4)</span>
+      </div>
+      <div class="section-desc">
+        Precios esperados por contenedor (FEU 40ft y TEU 20ft), tiempos de tránsito marítimo y recomendación de booking de espacios.
+      </div>
+
+      <div class="metrics-grid" id="weeklyCardsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Cono Probabilístico de Fletes -->
+    <section class="chart-panel">
+      <div class="section-title">
+        <span>📈 Cono de Proyección Estocástica de Fletes a 30 Días (Merton Jump-Diffusion Marítimo)</span>
+      </div>
+      <div class="section-desc">
+        Simulación de 5,000 escenarios estocásticos considerando asimetría de saltos por maniobras militares chinas y saturación portuaria.
+      </div>
+
+      <div class="chart-container">
+        <canvas id="freightTrajectoryChart"></canvas>
+      </div>
+
+      <!-- Slider Interactivo -->
+      <div class="slider-box">
+        <div class="slider-header">
+          <span id="sliderDayLabel" style="font-weight: 700; color: var(--accent-cyan);">Día Seleccionado: Día 0 (HOY)</span>
+          <span id="sliderCatalystLabel" style="color: var(--text-muted); font-size: 0.8rem;">Catalizador: Cotización Spot Observada.</span>
+        </div>
+        <input type="range" id="daySlider" min="0" max="30" value="0" step="1">
+        
+        <div class="slider-details-grid">
+          <div class="slider-detail-item">
+            <small>Soporte P10 (Tarifa Mínima)</small>
+            <strong id="cardP10" class="val-emerald">$4,450 USD</strong>
+          </div>
+          <div class="slider-detail-item">
+            <small>Cuartil P25</small>
+            <strong id="cardP25">$4,450 USD</strong>
+          </div>
+          <div class="slider-detail-item">
+            <small>Mediana P50 (Costo Esperado)</small>
+            <strong id="cardP50" class="val-cyan">$4,450 USD</strong>
+          </div>
+          <div class="slider-detail-item">
+            <small>Cuartil P75</small>
+            <strong id="cardP75">$4,450 USD</strong>
+          </div>
+          <div class="slider-detail-item">
+            <small>Techo P90 (Escenario Disrupción)</small>
+            <strong id="cardP90" class="val-rose">$4,450 USD</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculadora de Presupuesto para Importadores -->
+    <section class="calc-box">
+      <div class="section-title">
+        <span>🧮 Calculadora de Costos de Embarque y Presupuesto para Empresas en México</span>
+      </div>
+      <div class="section-desc">
+        Calcula el presupuesto total de importación marítima según origen, tipo de equipo y horizonte de embarque.
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-input-group">
+          <label>Ruta de Embarque</label>
+          <select id="calcRoute" onchange="updateFreightCalculator()">
+            <option value="kaohsiung">🇹🇼 Kaohsiung / Keelung (Taiwán) ➔ Manzanillo</option>
+            <option value="shanghai">🇨🇳 Shanghai / Ningbo (China) ➔ Manzanillo</option>
+          </select>
+        </div>
+        <div class="calc-input-group">
+          <label>Tipo de Contenedor</label>
+          <select id="calcContainerType" onchange="updateFreightCalculator()">
+            <option value="feu">40ft High Cube (FEU) - Estándar Industria</option>
+            <option value="teu">20ft Standard (TEU)</option>
+          </select>
+        </div>
+        <div class="calc-input-group">
+          <label>Cantidad de Contenedores</label>
+          <input type="number" id="calcQty" value="3" min="1" max="100" oninput="updateFreightCalculator()">
+        </div>
+        <div class="calc-input-group">
+          <label>Horizonte de Embarque</label>
+          <select id="calcHorizon" onchange="updateFreightCalculator()">
+            <option value="spot">Embarque Inmediato (Tarifa Spot)</option>
+            <option value="w1">En 1 Semana (Día 7)</option>
+            <option value="w2">En 2 Semanas (Día 14)</option>
+            <option value="w3">En 3 Semanas (Día 21)</option>
+            <option value="w4">En 4 Semanas / 1 Mes (Día 30)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="calc-summary-grid">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Costo Total Estimado ($ USD)</div>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;" id="calcTotalUsd">$14,040 USD</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Equivalente en Moneda Nacional ($ MXN)</div>
+          <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-emerald); font-family: 'JetBrains Mono', monospace;" id="calcTotalMxn">$255,392 MXN</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">Tipo de Cambio Banxico FIX: $18.1903</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Tiempo de Tránsito + Fondeo Estimado</div>
+          <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace;" id="calcLeadTime">27.2 Días Totales</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">22.4d Navegación + 4.8d Manzanillo</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Radar Cuantamental de Noticias -->
+    <section style="margin-bottom: 2rem;">
+      <div class="section-title">
+        <span>📡 Radar Cuantamental de Inteligencia Marítima & Geopolítica</span>
+      </div>
+      <div class="section-desc">
+        Detección en tiempo real de tensiones navales, saturación portuaria y decisiones tarifarias ordenadas por score de impacto.
+      </div>
+
+      <div class="filter-bar" id="channelFilters">
+        <button class="btn-filter active" onclick="filterChannel('all', this)">Todos (20)</button>
+        <button class="btn-filter" onclick="filterChannel('taiwan_strait', this)">🇹🇼 Taiwán & Estrecho</button>
+        <button class="btn-filter" onclick="filterChannel('china_ports', this)">🇨🇳 China & Puertos</button>
+        <button class="btn-filter" onclick="filterChannel('mexico_ports', this)">🇲🇽 México & Manzanillo</button>
+        <button class="btn-filter" onclick="filterChannel('shipping_lines', this)">🚢 Navieras & Tarifas</button>
+      </div>
+
+      <div class="news-grid" id="newsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- Grandes Choques Históricos -->
+    <section class="metric-card" style="margin-bottom: 2rem;">
+      <div class="section-title">
+        <span>📜 Registro de Grandes Choques Históricos en Fletes Marítimos Asia-México</span>
+      </div>
+      <div class="section-desc">
+        Análisis retrospectivo de eventos de cola (Fat-Tail Shocks) y su magnitud de encarecimiento en fletes transpacíficos.
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Evento Histórico</th>
+              <th>Fecha</th>
+              <th>Impacto por FEU</th>
+              <th>Variación %</th>
+              <th>Mecanismo de Transmisión</th>
+            </tr>
+          </thead>
+          <tbody id="shocksTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p><strong>IN2TECHMX Maritime & Geopolitical Intelligence Framework</strong> • Swarm Architecture ADR-006</p>
+      <p style="margin-top: 0.35rem; color: var(--text-muted);">
+        Datos de fletes marítimos, modelos estocásticos de difusión con saltos y monitoreo satelital geopolítico.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Data Script -->
+  <script src="data.js"></script>
+
+  <script>
+    let trajectoryChartInstance = null;
+    let currentFilter = 'all';
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function sanitizeUrl(url) {
+      if (!url || !/^https?:\/\//i.test(url)) return '#';
+      return encodeURI(url);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initWeeklyCards();
+      initChart();
+      initSlider();
+      renderNews();
+      renderShocksTable();
+      updateFreightCalculator();
+    });
+
+    function initWeeklyCards() {
+      const grid = document.getElementById('weeklyCardsGrid');
+      grid.innerHTML = '';
+
+      const colors = ['var(--accent-cyan)', 'var(--accent-emerald)', 'var(--accent-amber)', 'var(--accent-indigo)'];
+
+      WEEKLY_HORIZONS.forEach((h, idx) => {
+        const card = document.createElement('div');
+        card.className = 'metric-card';
+        card.style.borderTop = `3px solid ${colors[idx % colors.length]}`;
+        card.innerHTML = `
+          <div class="metric-title" style="color: ${colors[idx % colors.length]}; font-weight: 700;">📅 ${escapeHtml(h.title)}</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.4rem;">${escapeHtml(h.catalyst)}</div>
+          <div class="metric-value" style="font-size: 1.55rem; color: ${colors[idx % colors.length]}; margin-bottom: 0.25rem;">
+            $${h.p50_feu.toLocaleString()} USD <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">/ FEU</span>
+          </div>
+          <div style="font-size: 0.8rem; margin-bottom: 0.25rem;"><strong>20ft (TEU):</strong> $${h.p50_teu.toLocaleString()} USD</div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.4rem;"><strong>Rango P25-P75:</strong> ${h.range_p25_p75}</div>
+          <div style="font-size: 0.75rem; color: var(--accent-amber); font-weight: 600; margin-bottom: 0.5rem;">⏱️ Tránsito estimado: ${h.transit_days}</div>
+          <div style="font-size: 0.72rem; background: rgba(255,255,255,0.03); padding: 0.4rem; border-radius: 0.35rem; color: #cbd5e1; border-left: 2px solid ${colors[idx % colors.length]};">
+            ${escapeHtml(h.recommendation)}
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function initChart() {
+      const ctx = document.getElementById('freightTrajectoryChart').getContext('2d');
+      const labels = SHIPPING_TRAJECTORY.map(d => d.date);
+
+      trajectoryChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'P90 (Techo Disrupción Militar)',
+              data: SHIPPING_TRAJECTORY.map(d => d.p90),
+              borderColor: 'rgba(244, 63, 94, 0.7)',
+              backgroundColor: 'rgba(244, 63, 94, 0.08)',
+              fill: '+1',
+              borderDash: [5, 5],
+              pointRadius: 0
+            },
+            {
+              label: 'P75 (Cuartil Superior)',
+              data: SHIPPING_TRAJECTORY.map(d => d.p75),
+              borderColor: 'rgba(251, 146, 60, 0.8)',
+              backgroundColor: 'rgba(56, 189, 248, 0.08)',
+              fill: '+1',
+              pointRadius: 0
+            },
+            {
+              label: 'P50 (Mediana Flete Esperado)',
+              data: SHIPPING_TRAJECTORY.map(d => d.p50),
+              borderColor: '#38bdf8',
+              backgroundColor: 'transparent',
+              borderWidth: 2.5,
+              pointRadius: 2,
+              pointHoverRadius: 6
+            },
+            {
+              label: 'P25 (Cuartil Inferior)',
+              data: SHIPPING_TRAJECTORY.map(d => d.p25),
+              borderColor: 'rgba(16, 185, 129, 0.8)',
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              fill: '+1',
+              pointRadius: 0
+            },
+            {
+              label: 'P10 (Piso Normalización)',
+              data: SHIPPING_TRAJECTORY.map(d => d.p10),
+              borderColor: 'rgba(16, 185, 129, 0.7)',
+              backgroundColor: 'transparent',
+              borderDash: [5, 5],
+              pointRadius: 0
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'top', labels: { color: '#94a3b8', font: { family: 'Inter', size: 11 } } },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#38bdf8',
+              bodyColor: '#f8fafc',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()} USD`
+              }
+            }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.04)' },
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 10 },
+                callback: (v) => `$${v.toLocaleString()} USD`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function initSlider() {
+      const slider = document.getElementById('daySlider');
+      slider.addEventListener('input', (e) => {
+        const d = parseInt(e.target.value);
+        const item = SHIPPING_TRAJECTORY[d];
+        document.getElementById('sliderDayLabel').innerText = `Día Seleccionado: Día ${d} (${item.date})`;
+        document.getElementById('sliderCatalystLabel').innerText = `Catalizador: ${item.catalyst}`;
+        document.getElementById('cardP10').innerText = `$${item.p10.toLocaleString()} USD`;
+        document.getElementById('cardP25').innerText = `$${item.p25.toLocaleString()} USD`;
+        document.getElementById('cardP50').innerText = `$${item.p50.toLocaleString()} USD`;
+        document.getElementById('cardP75').innerText = `$${item.p75.toLocaleString()} USD`;
+        document.getElementById('cardP90').innerText = `$${item.p90.toLocaleString()} USD`;
+      });
+    }
+
+    function updateFreightCalculator() {
+      const route = document.getElementById('calcRoute').value;
+      const cType = document.getElementById('calcContainerType').value;
+      const qty = parseInt(document.getElementById('calcQty').value) || 1;
+      const horizon = document.getElementById('calcHorizon').value;
+
+      let basePerFeu = route === 'kaohsiung' ? 4680 : 4420;
+      
+      let dayIndex = 0;
+      if (horizon === 'w1') dayIndex = 7;
+      else if (horizon === 'w2') dayIndex = 14;
+      else if (horizon === 'w3') dayIndex = 21;
+      else if (horizon === 'w4') dayIndex = 30;
+
+      let projectedUnitRate = SHIPPING_TRAJECTORY[dayIndex].p50;
+      if (route === 'kaohsiung') projectedUnitRate += 230; // Taiwan premium
+
+      if (cType === 'teu') projectedUnitRate *= 0.64;
+
+      const totalUsd = Math.round(projectedUnitRate * qty);
+      const fxRate = 18.1903;
+      const totalMxn = Math.round(totalUsd * fxRate);
+
+      document.getElementById('calcTotalUsd').innerText = `$${totalUsd.toLocaleString()} USD`;
+      document.getElementById('calcTotalMxn').innerText = `$${totalMxn.toLocaleString('es-MX')} MXN`;
+
+      let transitDays = route === 'kaohsiung' ? 23.5 : 21.5;
+      let congestionDays = 4.8;
+      document.getElementById('calcLeadTime').innerText = `${(transitDays + congestionDays).toFixed(1)} Días Totales`;
+    }
+
+    function filterChannel(channel, btn) {
+      currentFilter = channel;
+      document.querySelectorAll('#channelFilters button').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderNews();
+    }
+
+    function renderNews() {
+      const grid = document.getElementById('newsGrid');
+      grid.innerHTML = '';
+
+      const filtered = currentFilter === 'all'
+        ? RECENT_SHIPPING_NEWS
+        : RECENT_SHIPPING_NEWS.filter(n => n.channel === currentFilter);
+
+      filtered.forEach(item => {
+        const isBull = item.direction === 'ALCISTA_FLETE';
+        const isBear = item.direction === 'BAJISTA_FLETE';
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <div>
+            <div class="news-meta">
+              <span class="news-source">${escapeHtml(item.source)}</span>
+              <span>${escapeHtml(item.date)}</span>
+            </div>
+            <div class="news-tags">
+              <span class="tag ${item.impact_badge || 'badge-moderado'}">⚡ ${item.impact_score} / 10 · ${item.impact_level}</span>
+              <span class="tag ${isBull ? 'tag-bull' : (isBear ? 'tag-bear' : '')}">${escapeHtml(item.direction || 'NEUTRAL')}</span>
+              <span class="tag" style="color: var(--accent-cyan);">${escapeHtml(item.channel_ui || 'Marítimo')}</span>
+            </div>
+            <div class="news-title">${escapeHtml(item.title)}</div>
+            <div class="transmission-box">
+              <div class="transmission-title">⚙️ Transmisión en Costos y Logística:</div>
+              <div>${escapeHtml(item.transmission || 'Operación logística marítima estándar.')}</div>
+            </div>
+          </div>
+          <a href="${sanitizeUrl(item.url)}" target="_blank" rel="noopener noreferrer" class="news-link">Ver artículo original ↗</a>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function renderShocksTable() {
+      const tbody = document.getElementById('shocksTableBody');
+      tbody.innerHTML = '';
+
+      HISTORICAL_SHOCKS.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight: 700; color: #f8fafc;">${escapeHtml(s.event)}</td>
+          <td>${escapeHtml(s.date)}</td>
+          <td style="color: var(--accent-rose); font-weight: 700;">${escapeHtml(s.impact_feu_usd)}</td>
+          <td style="color: var(--accent-rose);">${escapeHtml(s.change_pct)}</td>
+          <td style="font-family: inherit; font-size: 0.75rem; color: #cbd5e1;">${escapeHtml(s.transmission)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>

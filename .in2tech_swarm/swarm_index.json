@@ -1,0 +1,35 @@
+{
+  "project": "in2tech-taiwan-shipping-mexico-monitor",
+  "version": "1.0.0",
+  "swarm_active": true,
+  "protocol": "ADR-006",
+  "custodians": [
+    {
+      "id": "custodio-freight-routes",
+      "domain": "Rutas Marítimas Transpacíficas Asia-México",
+      "slice_file": ".in2tech_swarm/slices/slice_01_freight_domain_and_routes.md",
+      "keywords": ["rutas", "manzanillo", "lazaro_cardenas", "shanghai", "kaohsiung", "feu", "teu"],
+      "code_paths": ["scripts/daily_shipping_sync.py", "data.js"],
+      "contracts": ["FreightSpotQuote", "TaiwanStraitTensionIndex"],
+      "dependencies": []
+    },
+    {
+      "id": "custodio-pricing-and-radar",
+      "domain": "Simulación Estocástica de Fletes y Radar Cuantamental",
+      "slice_file": ".in2tech_swarm/slices/slice_02_taiwan_radar_and_pricing_model.md",
+      "keywords": ["monte_carlo", "merton", "taiwan_strait", "pla_drills", "flete", "spot", "baf", "pss"],
+      "code_paths": ["scripts/daily_shipping_sync.py", "tests/test_shipping_engine.py"],
+      "contracts": ["FreightSimulationResult"],
+      "dependencies": ["custodio-freight-routes"]
+    },
+    {
+      "id": "custodio-logistics-ui",
+      "domain": "Tablero Ejecutivo Web y Calculadora de Importación",
+      "slice_file": ".in2tech_swarm/slices/slice_02_taiwan_radar_and_pricing_model.md",
+      "keywords": ["dashboard", "index_html", "calculadora_fletes", "recomendacion_booking"],
+      "code_paths": ["index.html"],
+      "contracts": [],
+      "dependencies": ["custodio-pricing-and-radar"]
+    }
+  ]
+}

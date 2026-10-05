@@ -1,0 +1,54 @@
+{
+  "projectId": "in2tech-taiwan-shipping-mexico-monitor",
+  "version": "1.0.0",
+  "lastUpdate": "2026-10-05T15:25:30Z",
+  "stages": {
+    "stage-1": {
+      "name": "Especificación Funcional (SF) y Dominio Marítimo",
+      "status": "COMPLETED"
+    },
+    "stage-2": {
+      "name": "Estructuración de Contratos de Datos y Swarm Slices",
+      "status": "COMPLETED"
+    },
+    "stage-3": {
+      "name": "Codificación ADS (UI, Motor Estocástico y Sincronizador)",
+      "status": "IN_PROGRESS"
+    },
+    "stage-4": {
+      "name": "Validación de 3 Puertas (Gates)",
+      "status": "PENDING"
+    },
+    "stage-5": {
+      "name": "Sellado y Despliegue en GitHub Pages",
+      "status": "PENDING"
+    }
+  },
+  "roles": {
+    "DD": "ACTIVE",
+    "ADS-Core": "ACTIVE",
+    "AS-Security": "PENDING",
+    "AA-Auditor": "PENDING",
+    "FS-Guardian": "PENDING"
+  },
+  "modules": [
+    {
+      "id": "freight-probabilistic-engine",
+      "name": "Motor Estocástico de Fletes Marítimos Asia-México (FEU/TEU)",
+      "progress": 30,
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "taiwan-geopolitical-radar",
+      "name": "Radar Cuantamental de Tensión en Estrecho de Taiwán y Puertos",
+      "progress": 30,
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": "logistics-executive-web",
+      "name": "Dashboard Ejecutivo de Decisión para Importadores México",
+      "progress": 20,
+      "status": "IN_PROGRESS"
+    }
+  ]
+}
